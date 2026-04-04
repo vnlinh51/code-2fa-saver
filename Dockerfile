@@ -33,7 +33,7 @@ COPY packages/backend/package.json ./packages/backend/
 COPY packages/extension/package.json ./packages/extension/
 
 # Chỉ cài production dependencies (bỏ qua devDependencies như vite, wxt, v.v.) giúp image nhẹ hơn rất nhiều
-RUN npm ci --omit=dev
+RUN npm ci --omit=dev --ignore-scripts
 
 # Copy thư mục dist đã được build ở bước trước sang
 COPY --from=builder /app/packages/backend/dist ./packages/backend/dist
