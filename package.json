@@ -6,6 +6,7 @@
     "packages/*"
   ],
   "scripts": {
+    "start:prod": "npm run start:prod --workspace=packages/backend",
     "backend": "npm run start:dev --workspace=packages/backend",
     "extension": "npm run dev --workspace=packages/extension"
   }
