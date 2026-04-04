@@ -1,0 +1,12 @@
+{
+  "name": "easy-2fa-saver",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "backend": "npm run start:dev --workspace=packages/backend",
+    "extension": "npm run dev --workspace=packages/extension"
+  }
+}
