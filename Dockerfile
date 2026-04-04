@@ -6,16 +6,11 @@ WORKDIR /app
 # Cài đặt các thư viện hệ thống cần thiết cho một số node_modules (nếu có)
 RUN apk add --no-cache python3 make g++
 
-# Copy config packages của toàn bộ monorepo
-COPY package.json package-lock.json ./
-COPY packages/backend/package.json ./packages/backend/
-COPY packages/extension/package.json ./packages/extension/
-
-# Cài đặt toàn bộ dependencies (bao gồm cả devDependencies để có thể build)
-RUN npm ci
-
-# Copy toàn bộ mã nguồn
+# Copy toàn bộ mã nguồn trước để tránh lỗi thiếu file khi chạy thư viện có postinstall hook
 COPY . .
+
+# Cài đặt toàn bộ dependencies
+RUN npm ci
 
 # Build riêng backend
 RUN npm run build --workspace=packages/backend
