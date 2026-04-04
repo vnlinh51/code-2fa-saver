@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Form, Input, Button, Tabs, message, Alert } from 'antd';
 import { UserOutlined, LockOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
 import { useForm, Controller } from 'react-hook-form';
@@ -18,10 +19,22 @@ type FormData = z.infer<typeof schema>;
 export function LoginPage() {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
   const [errorMsg, setErrorMsg] = useState('');
-  const { login } = useAuthStore();
+  const { login, isAuthenticated } = useAuthStore();
   const [messageApi, contextHolder] = message.useMessage();
+  const navigate = useNavigate();
 
-  const { control, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
+
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
@@ -96,7 +109,7 @@ export function LoginPage() {
             <Controller
               name="username"
               control={control}
-              defaultValue=""
+              defaultValue="linh"
               render={({ field }) => (
                 <Input
                   {...field}
@@ -117,7 +130,7 @@ export function LoginPage() {
             <Controller
               name="password"
               control={control}
-              defaultValue=""
+              defaultValue="123456"
               render={({ field }) => (
                 <Input.Password
                   {...field}
