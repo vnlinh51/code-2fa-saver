@@ -10,8 +10,8 @@ import { authApi } from '@/services/api';
 import { useAuthStore } from '@/store/authStore';
 
 const schema = z.object({
-  username: z.string().min(3, 'Tối thiểu 3 ký tự').max(30),
-  password: z.string().min(6, 'Tối thiểu 6 ký tự'),
+  username: z.string().min(1, 'Tối thiểu 1 ký tự').max(15),
+  password: z.string().min(1, 'Tối thiểu 1 ký tự').max(15),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -109,7 +109,7 @@ export function LoginPage() {
             <Controller
               name="username"
               control={control}
-              defaultValue="linh"
+              defaultValue="d"
               render={({ field }) => (
                 <Input
                   {...field}
@@ -130,10 +130,11 @@ export function LoginPage() {
             <Controller
               name="password"
               control={control}
-              defaultValue="123456"
+              defaultValue=""
               render={({ field }) => (
                 <Input.Password
                   {...field}
+                  autoFocus
                   prefix={<LockOutlined className="text-slate-500" />}
                   placeholder="Mật khẩu"
                   size="large"

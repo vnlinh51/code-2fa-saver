@@ -4,12 +4,13 @@ import { ApiProperty } from '@nestjs/swagger';
 export class LoginDto {
   @ApiProperty({ example: 'johndoe' })
   @IsString()
-  @MinLength(3)
-  @MaxLength(30)
+  @MinLength(1)
+  @MaxLength(15)
   username: string;
 
   @ApiProperty({ example: 'secret123' })
   @IsString()
-  @MinLength(6)
+  @MinLength(1)
+  @MaxLength(15)
   password: string;
 }
