@@ -6,7 +6,7 @@ export default defineConfig({
   manifest: {
     name: 'Easy 2FA Saver',
     description: 'Quản lý mã 2FA của bạn một cách dễ dàng và an toàn',
-    version: '1.0.0',
+    version: '1.0.1',
     permissions: ['storage'],
     icons: {
       16: 'icon-16.png',
@@ -35,4 +35,3 @@ export default defineConfig({
     },
   }),
 });
-
