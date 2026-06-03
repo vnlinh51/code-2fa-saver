@@ -6,6 +6,8 @@ import {
   EditOutlined,
   DeleteOutlined,
   LinkOutlined,
+  EyeOutlined,
+  EyeInvisibleOutlined,
 } from '@ant-design/icons';
 import type { Account } from '@/services/api';
 import { useTotp } from '@/hooks/useTotp';
@@ -20,13 +22,14 @@ interface AccountCardProps {
 export function AccountCard({ account, onEdit, onDelete }: AccountCardProps) {
   const { code, secondsLeft, progress } = useTotp(account.secret);
   const [copied, setCopied] = useState(false);
+  const [showSecret, setShowSecret] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
 
   const formattedCode = `${code.slice(0, 3)} ${code.slice(3)}`;
 
-  const handleCopy = async () => {
+  const handleCopy = async (text: string) => {
     try {
-      await navigator.clipboard.writeText(code);
+      await navigator.clipboard.writeText(text);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -56,6 +59,15 @@ export function AccountCard({ account, onEdit, onDelete }: AccountCardProps) {
 
         {/* Actions — visible on hover */}
         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity ml-2">
+          <Tooltip title={showSecret ? 'Ẩn secret' : 'Xem secret'}>
+            <Button
+              type="text"
+              size="small"
+              icon={showSecret ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+              className="!text-slate-400 hover:!text-yellow-400 !h-6 !w-6 !min-w-0 !p-0"
+              onClick={() => setShowSecret(!showSecret)}
+            />
+          </Tooltip>
           <Tooltip title="Sửa">
             <Button
               type="text"
@@ -85,11 +97,25 @@ export function AccountCard({ account, onEdit, onDelete }: AccountCardProps) {
         </div>
       </div>
 
+      {/* Raw secret display */}
+      {showSecret && (
+        <Tooltip title="Click để copy secret">
+          <div
+            className="flex items-center justify-center cursor-pointer border border-dashed border-yellow-500/40 rounded-md p-2 mb-2 bg-yellow-500/5"
+            onClick={() => handleCopy(account.secret)}
+          >
+            <span className="font-code text-xs font-medium text-yellow-400 select-all break-all">
+              {account.secret}
+            </span>
+          </div>
+        </Tooltip>
+      )}
+
       {/* TOTP Code + Copy */}
       <Tooltip color={copied ? 'green' : 'blue'} title={copied ? 'Đã copy!' : 'Copy mã'}>
         <div
           className="flex items-center justify-center cursor-pointer border border-dashed rounded-md p-2 mb-2"
-          onClick={handleCopy}
+          onClick={() => handleCopy(code)}
         >
           <span className="font-code text-2xl font-bold tracking-widest text-primary-500 select-all">
             {formattedCode}

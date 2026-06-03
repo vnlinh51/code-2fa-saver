@@ -19,6 +19,7 @@ type FormData = z.infer<typeof schema>;
 export function LoginPage() {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
   const [errorMsg, setErrorMsg] = useState('');
+  const [rawError, setRawError] = useState<any>(null);
   const { login, isAuthenticated } = useAuthStore();
   const [messageApi, contextHolder] = message.useMessage();
   const navigate = useNavigate();
@@ -48,12 +49,20 @@ export function LoginPage() {
     },
     onError: (err: any) => {
       const msg = err?.response?.data?.message || 'Đã có lỗi xảy ra';
+      console.log('error: ', msg);
       setErrorMsg(typeof msg === 'string' ? msg : msg.join(', '));
+      setRawError({
+        status: err?.response?.status,
+        statusText: err?.response?.statusText,
+        data: err?.response?.data,
+        message: err?.message,
+      });
     },
   });
 
   const onSubmit = (data: FormData) => {
     setErrorMsg('');
+    setRawError(null);
     mutation.mutate(data);
   };
 
@@ -72,8 +81,8 @@ export function LoginPage() {
         <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-purple-600 flex items-center justify-center mx-auto mb-3 shadow-lg shadow-primary-500/20">
           <SafetyCertificateOutlined className="text-white text-2xl" />
         </div>
-        <h1 className="text-xl font-bold text-slate-100">Easy 2FA Saver</h1>
-        <p className="text-xs text-slate-500 mt-1">Quản lý mã 2FA của bạn</p>
+        <h1 className="text-xl font-bold text-slate-100">The Fucking Of MFA Codes</h1>
+        <p className="text-xs text-slate-500 mt-1">Quản cmn lý mã MFA của bợn</p>
       </div>
 
       {/* Tabs */}
@@ -83,8 +92,8 @@ export function LoginPage() {
           onChange={handleTabChange}
           centered
           items={[
-            { key: 'login', label: 'Đăng nhập' },
-            { key: 'register', label: 'Đăng ký' },
+            { key: 'login', label: 'Đăng cmn nhập' },
+            { key: 'register', label: 'Đăng cmn ký' },
           ]}
           className="mb-4"
         />
@@ -114,7 +123,7 @@ export function LoginPage() {
                 <Input
                   {...field}
                   prefix={<UserOutlined className="text-slate-500" />}
-                  placeholder="Tên đăng nhập"
+                  placeholder="Tên đăng cmn nhập"
                   size="large"
                   autoComplete="username"
                 />
@@ -136,7 +145,7 @@ export function LoginPage() {
                   {...field}
                   autoFocus
                   prefix={<LockOutlined className="text-slate-500" />}
-                  placeholder="Mật khẩu"
+                  placeholder="Mật cmn khẩu"
                   size="large"
                   autoComplete={activeTab === 'login' ? 'current-password' : 'new-password'}
                 />
@@ -152,8 +161,28 @@ export function LoginPage() {
             loading={mutation.isPending}
             className="!mt-4 !h-11 !font-semibold"
           >
-            {activeTab === 'login' ? 'Đăng nhập' : 'Đăng ký'}
+            {activeTab === 'login' ? 'Đăng cmn nhập' : 'Đăng cmn ký'}
           </Button>
+
+          {rawError && (
+            <pre
+              style={{
+                marginTop: 12,
+                padding: 8,
+                background: '#1a1a2e',
+                border: '1px solid #e74c3c',
+                borderRadius: 6,
+                color: '#e74c3c',
+                fontSize: 11,
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-all',
+                maxHeight: 200,
+                overflow: 'auto',
+              }}
+            >
+              {JSON.stringify(rawError, null, 2)}
+            </pre>
+          )}
         </Form>
       </div>
     </div>
